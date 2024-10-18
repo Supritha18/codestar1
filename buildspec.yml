@@ -1,5 +1,12 @@
 version: 0.2
 
+env:
+  variables:
+    PARTITION: "aws"  # Adjust as needed
+    AWS_REGION: "ap-south-1"
+    ACCOUNT_ID: "680647079609"
+    PROJECT_ID: "aws-codestar"
+
 phases:
   install:
     runtime-versions:
