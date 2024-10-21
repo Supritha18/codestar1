@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: s3://codestar1bucket/aws-codestar/template-export.yml
-    destination: /path/on/instance
+    destination: /var/www/html/
 
 hooks:
   BeforeInstall:
