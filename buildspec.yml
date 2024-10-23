@@ -25,19 +25,21 @@ phases:
   
   build:
     commands:
+      - echo "Zipping the entire source code..."
+      - mkdir -p build  # Create the build directory to store the zip file
+      - zip -r build/source_code.zip *  # Zip all files from the root directory and place the zip in the 'build' directory
 
       # Use AWS SAM to package the application by using AWS CloudFormation
-      - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
+      #- aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
 
       # Do not remove this statement. This command is required for AWS CodeStar projects.
       # Update the AWS Partition, AWS Region, account ID and project ID in the project ARN on template-configuration.json file so AWS CloudFormation can tag project resources.
-      - sed -i.bak 's/\$PARTITION\$/'${PARTITION}'/g;s/\$AWS_REGION\$/'${AWS_REGION}'/g;s/\$ACCOUNT_ID\$/'${ACCOUNT_ID}'/g;s/\$PROJECT_ID\$/'${PROJECT_ID}'/g' template-configuration.json
+      # - sed -i.bak 's/\$PARTITION\$/'${PARTITION}'/g;s/\$AWS_REGION\$/'${AWS_REGION}'/g;s/\$ACCOUNT_ID\$/'${ACCOUNT_ID}'/g;s/\$PROJECT_ID\$/'${PROJECT_ID}'/g' template-configuration.json
 
 artifacts:
   files:
-    - '**/*'  # Include all files or specify specific files or directories (e.g., 'build/**/*')
+    - 'build/source_code.zip'  
   discard-paths: yes
-  base-directory: build
   
   #files:
   # - template-export.yml
