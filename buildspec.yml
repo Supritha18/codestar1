@@ -35,5 +35,10 @@ phases:
 
 artifacts:
   files:
-    - template-export.yml
-    - template-configuration.json
+    - '**/*'  # Include all files or specify specific files or directories (e.g., 'build/**/*')
+  discard-paths: yes
+  base-directory: build
+  
+  #files:
+  # - template-export.yml
+  # - template-configuration.json 
