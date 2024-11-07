@@ -26,7 +26,7 @@ phases:
   build:
     commands:
       - echo "Zipping the entire source code..."
-      - mkdir -p build  # Create the build directory to store the zip file
+      # - mkdir -p build  # Create the build directory to store the zip file
       - zip -r build/source_code.zip *  # Zip all files from the root directory and place the zip in the 'build' directory
 
       # Use AWS SAM to package the application by using AWS CloudFormation
