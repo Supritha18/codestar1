@@ -38,7 +38,8 @@ phases:
 
 artifacts:
   files:
-    - 'build/source_code.zip'  
+    #- 'build/source_code.zip'
+    - 'source_code.zip'
   discard-paths: yes
   
   #files:
