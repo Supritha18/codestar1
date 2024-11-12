@@ -19,10 +19,10 @@ phases:
   build:
     commands:
       - echo "Zipping the entire source code..."
-      - mkdir -p build
-      - zip -r build/source_code.zip *
+      # - mkdir -p build
+      - zip -r source_code.zip *
 
 artifacts:
   files:
-    - 'build/source_code.zip'
+    - 'source_code.zip'
   discard-paths: yes
