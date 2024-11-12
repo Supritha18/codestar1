@@ -2,47 +2,27 @@ version: 0.2
 
 env:
   variables:
-    PARTITION: "aws"  # Adjust as needed
-    AWS_REGION: "ap-south-1"
-    ACCOUNT_ID: "680647079609"
-    PROJECT_ID: "aws-codestar"
-    S3_BUCKET: "codestar1bucket"
+    S3_BUCKET: "s3://codestar1bucket/"  # Replace with your bucket name
 
 phases:
   install:
     runtime-versions:
       python: 3.8
     commands:
-
-      # Upgrade AWS CLI to the latest version
       - pip install --upgrade awscli
 
   pre_build:
     commands:
-
-      # Discover and run unit tests in the 'tests' directory. For more information, see <https://docs.python.org/3/library/unittest.html#test-discovery>
+      - echo "Running pre-build tests"
       - python -m unittest discover tests
-  
+
   build:
     commands:
       - echo "Zipping the entire source code..."
-      #- mkdir -p build  # Create the build directory to store the zip file
-      #- zip -r build/source_code.zip *  # Zip all files from the root directory and place the zip in the 'build' directory
-      - zip -r source_code.zip *
-
-      # Use AWS SAM to package the application by using AWS CloudFormation
-      #- aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
-
-      # Do not remove this statement. This command is required for AWS CodeStar projects.
-      # Update the AWS Partition, AWS Region, account ID and project ID in the project ARN on template-configuration.json file so AWS CloudFormation can tag project resources.
-      # - sed -i.bak 's/\$PARTITION\$/'${PARTITION}'/g;s/\$AWS_REGION\$/'${AWS_REGION}'/g;s/\$ACCOUNT_ID\$/'${ACCOUNT_ID}'/g;s/\$PROJECT_ID\$/'${PROJECT_ID}'/g' template-configuration.json
+      - mkdir -p build
+      - zip -r build/source_code.zip *
 
 artifacts:
   files:
-    #- 'build/source_code.zip'
-    - 'source_code.zip'
+    - 'build/source_code.zip'
   discard-paths: yes
-  
-  #files:
-  # - template-export.yml
-  # - template-configuration.json 
