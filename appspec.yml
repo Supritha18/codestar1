@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /source_code.zip
+  - source: /
     destination: /var/lib/deploy
 
 hooks:
