@@ -2,27 +2,44 @@ version: 0.2
 
 env:
   variables:
-    S3_BUCKET: "s3://codestar1bucket/"  # Replace with your bucket name
+    S3_BUCKET: "awsdemobucket01"  # Replace with your S3 bucket
+    CODEDEPLOY_APP_NAME: "aws-cicd-build"  # Replace with your CodeDeploy application name
+    CODEDEPLOY_DEPLOYMENT_GROUP: "awsbuild-group"  # Replace with your CodeDeploy deployment group
+    REGION: "ap-south-1"  # Set your AWS region
 
 phases:
   install:
     runtime-versions:
-      python: 3.8
+      nodejs: 14  # Example runtime version, change if needed
     commands:
-      - pip install --upgrade awscli
+      - echo "Installing dependencies..."
 
   pre_build:
     commands:
-      - echo "Running pre-build tests"
-      - python -m unittest discover tests
+      - echo "Cleaning up unnecessary files..."
+      - rm -rf ./temp_files  # Remove temporary files
+      - rm -rf ./logs  # Remove log files
 
   build:
     commands:
-      - echo "Zipping the entire source code..."
-      # - mkdir -p build
-      - zip -r source_code.zip *
+      - echo "Building the application..."
+      - npm install  # Example for Node.js app, replace with your build command
+      - npm run build  # Replace with the build script for your application
+
+  post_build:
+    commands:
+      - echo "Zipping the application for deployment..."
+      - zip -r application.zip *  # Package the entire application directory
+      - aws s3 cp application.zip s3://$S3_BUCKET/$CODEDEPLOY_APP_NAME/application.zip
+
+      - echo "Creating a new deployment in CodeDeploy..."
+      - aws deploy create-deployment \
+          --application-name $CODEDEPLOY_APP_NAME \
+          --deployment-group-name $CODEDEPLOY_DEPLOYMENT_GROUP \
+          --s3-location bucket=$S3_BUCKET,key=$CODEDEPLOY_APP_NAME/application.zip,bundleType=zip \
+          --region $REGION
 
 artifacts:
   files:
-    - 'source_code.zip'
+    - application.zip
   discard-paths: yes
