@@ -24,7 +24,7 @@ phases:
     commands:
       - echo "Building the application..."
       - npm install  # Example for Node.js app, replace with your build command
-      - npm run build  # Replace with the build script for your application
+      # - npm run build  # Replace with the build script for your application
 
   post_build:
     commands:
