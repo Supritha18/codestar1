@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    S3_BUCKET: "s3://mylinuxbucket01/"  # Replace with your bucket name
+    S3_BUCKET: "s3://codestar1bucket/"  # Replace with your bucket name
 
 phases:
   install:
