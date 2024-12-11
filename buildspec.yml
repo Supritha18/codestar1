@@ -5,6 +5,8 @@ phases:
     runtime-versions:
       python: 3.9  # Example runtime (ensure it matches your needs)
     commands:
+      - yum update -y  # Update package manager for Amazon Linux
+      - yum install -y curl  # Install curl
       - curl -sL https://aka.ms/InstallAzureCLIDeb | bash  # Install Azure CLI
       - az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_SECRET --tenant $AZURE_TENANT_ID
 
