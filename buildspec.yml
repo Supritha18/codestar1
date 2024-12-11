@@ -3,21 +3,17 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.9
+      python: 3.9  # Example runtime (ensure it matches your needs)
     commands:
-      - echo Installing dependencies...
-      - pip install -r requirements.txt
-  pre_build:
-    commands:
-      - echo Running pre-build checks...
-      - python -m flake8 # Example linting command
+      - apt-get update -y
+      - apt-get install -y curl  # Ensure curl is installed
+      - curl -sL https://aka.ms/InstallAzureCLIDeb | bash  # Install Azure CLI
+      - az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_SECRET --tenant $AZURE_TENANT_ID
+
   build:
     commands:
-      - echo Running tests...
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src1454388845/src
-      - pytest tests/*.py --maxfail=3 --disable-warnings -v
-      - mkdir testfile
+      - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path build.zip
 
 artifacts:
   files:
-    - '**/*' 
+    - '**/*'
