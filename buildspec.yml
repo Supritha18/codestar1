@@ -13,7 +13,7 @@ phases:
   pre_build:
     commands:
       - echo "Downloading source files from S3..."
-      - aws s3 cp s3://azurebucket-01/aws-to-azure-build/BuildArtif/ ./source/ --recursive  # Download all files from the S3 bucket
+      - aws s3 cp s3://azurebucket-01/aws-to-azure-build/SourceArti/ ./source/ --recursive  # Download all files from the S3 bucket
       - ls -la ./source/  # Verify that files have been downloaded
 
   build:
