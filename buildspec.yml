@@ -13,7 +13,7 @@ phases:
   build:
   commands:
     - echo "Zipping files from the 'src/' directory..."
-    - zip -r build.zip src/  # Zip all files from 'src/'
+    - zip -r build.zip /codebuild/output/src*/src/  # Zip all files from 'src/'
     - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path build.zip --type zip
 
 artifacts:
