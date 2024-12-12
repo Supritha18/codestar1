@@ -12,19 +12,17 @@ phases:
 
   pre_build:
     commands:
-      - echo "Fetching the latest artifact from S3..."
-      - LATEST_FILE=$(aws s3 ls s3://azurebucket-01/aws-to-azure-build/SourceArti/ --recursive | sort | tail -n 1 | awk '{print $4}')
-      - echo "Latest file is: $LATEST_FILE"
-      - aws s3 cp s3://azurebucket-01/aws-to-azure-build/SourceArti/$LATEST_FILE ./latest-build.zip
-      - ls -la  # Verify that the latest file has been downloaded
+      - echo "Downloading source files from S3..."
+      - aws s3 cp s3://azurebucket-01/aws-to-azure-build/BuildArtif/ ./source/ --recursive  # Download all files from the S3 bucket
+      - ls -la ./source/  # Verify that files have been downloaded
 
   build:
     commands:
-      - echo "Unzipping the latest artifact..."
-      - unzip latest-build.zip -d build/  # Unzip the artifact into the 'build/' directory
-      - ls -la build/  # Verify the extracted files
-      - echo "Creating build.zip for deployment..."
-      - zip -r build.zip build/  # Package all files into a zip file
+      - echo "Preparing files for deployment..."
+      - mkdir build  # Create a build directory
+      - cp -r ./source/* build/  # Copy downloaded files into the build directory
+      - echo "Creating build.zip..."
+      - zip -r build.zip build/  # Package all files in the 'build' directory into a zip file
       - ls -la  # Verify the zip file is created
       - echo "Deploying build.zip to Azure App Service..."
       - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path build.zip --type zip
