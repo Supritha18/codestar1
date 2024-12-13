@@ -14,10 +14,13 @@ phases:
 
   pre_build:
     commands:
-      - echo "Preparing source files for deployment..."
+      - echo "Verifying the source directory contents..."
+      - ls -la $CODEBUILD_SRC_DIR  # Verify source code is downloaded correctly
       - mkdir -p ./build
       - echo "Copying files to build directory..."
-      - find $CODEBUILD_SRC_DIR -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} ./build/ \;  # Copy all files except the 'build' directory
+      - find $CODEBUILD_SRC_DIR -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} ./build/ \;
+      - echo "Files in build directory:"
+      - ls -la ./build/  # Verify if files are copied to build
 
   build:
     commands:
