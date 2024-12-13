@@ -24,8 +24,12 @@ phases:
 
   build:
     commands:
+      - echo "Creating deployment package..."
+      - zip -r build.zip ./build/  # Zip the entire build directory
+      - echo "Verifying the deployment package..."
+      - ls -la build.zip
       - echo "Deploying to Azure App Service..."
-      - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path ./build/   # Deploy the zip file to Azure
+      - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path build.zip --type zip
 
 artifacts:
   files:
