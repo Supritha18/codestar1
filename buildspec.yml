@@ -5,37 +5,27 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
+      - echo "Installing necessary tools..."
       - apt-get update -y
-      - apt-get install -y curl zip unzip  # Install necessary tools
+      - apt-get install -y curl zip  # Install required tools
+      - echo "Installing Azure CLI..."
       - curl -sL https://aka.ms/InstallAzureCLIDeb | bash  # Install Azure CLI
-      - az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_SECRET --tenant $AZURE_TENANT_ID
+      - az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_SECRET --tenant $AZURE_TENANT_ID  # Authenticate with Azure
 
   pre_build:
     commands:
-      - echo "Fetching the latest artifact from S3 bucket..."
-      - |
-        LATEST_FILE=$(aws s3api list-objects-v2 \
-          --bucket azurebucket-01 \
-          --prefix aws-to-azure-build/SourceArti/ \
-          --query "sort_by(Contents, &LastModified)[-1].Key" \
-          --output text)
-      - echo "Latest file: $LATEST_FILE"
-      - aws s3 cp s3://azurebucket-01/$LATEST_FILE ./latest.zip
-      - echo "Extracting the downloaded artifact..."
-      - mkdir -p ./source
-      - unzip ./latest.zip -d ./source
-      - echo "Verifying extracted files..."
-      - ls -la ./source/
+      - echo "Preparing source files for deployment..."
+      - mkdir -p ./build
+      - cp -r $CODEBUILD_SRC_DIR/* ./build/  # Copy the source code from the default directory to the build folder
 
   build:
     commands:
-      - echo "Verifying downloaded source files..."
-      - find ./source/ -type f -exec file {} \;  # Display file types to ensure content integrity
       - echo "Creating deployment package..."
-      - zip -r build.zip ./source/  # Zip all files from the 'source' directory
-      - ls -la  # Verify the zip file is created
-      - echo "Deploying build.zip to Azure App Service..."
-      - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path build.zip --type zip
+      - zip -r build.zip ./build/  # Zip all files in the build directory
+      - echo "Verifying the deployment package..."
+      - ls -la build.zip  # Verify the zip file is created
+      - echo "Deploying to Azure App Service..."
+      - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path build.zip --type zip  # Deploy the zip file to Azure
 
 artifacts:
   files:
