@@ -16,7 +16,8 @@ phases:
     commands:
       - echo "Preparing source files for deployment..."
       - mkdir -p ./build
-      - cp -r $CODEBUILD_SRC_DIR/* ./build/  # Copy the source code from the default directory to the build folder
+      - echo "Copying files to build directory..."
+      - find $CODEBUILD_SRC_DIR -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} ./build/ \;  # Copy all files except the 'build' directory
 
   build:
     commands:
