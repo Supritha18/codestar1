@@ -31,9 +31,9 @@ phases:
       - echo "Uploading deployment package to S3..."
       - aws s3 cp build.zip s3://azurebucket-01/build/  # Upload build.zip to S3
       - echo "Downloading deployment package from S3..."
-      - aws s3 cp s3://azurebucket-01/build/build.zip ./build.zip  # Download build.zip from S3 to ensure it's used for deployment
+      - aws s3 cp s3://azurebucket-01/build/build.zip ./wwwroot.zip  # Download build.zip from S3 to ensure it's used for deployment
       - echo "Deploying to Azure App Service..."
-      - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path build.zip --type zip
+      - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path wwwroot.zip --type zip
 
 artifacts:
   files:
