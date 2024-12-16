@@ -25,7 +25,9 @@ phases:
   build:
     commands:
       - echo "Creating deployment package..."
-      - zip -r build.zip ./build/  # Zip the entire build directory
+      - cd build  # Change to the `build` directory to package only its contents
+      - zip -r ../build.zip ./  # Zip the contents of `build`, not the directory itself
+      - cd ..
       - echo "Verifying the deployment package..."
       - ls -la build.zip
       - echo "Uploading deployment package to S3..."
