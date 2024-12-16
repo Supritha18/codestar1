@@ -16,16 +16,16 @@ phases:
     commands:
       - echo "Verifying the source directory contents..."
       - ls -la $CODEBUILD_SRC_DIR  # Verify source code is downloaded correctly
-      - mkdir -p ./build
+      - mkdir -p ./wwwroot
       - echo "Copying files to build directory..."
-      - find $CODEBUILD_SRC_DIR -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} ./build/ \;
+      - find $CODEBUILD_SRC_DIR -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} ./wwwroot/ \;
       - echo "Files in build directory:"
-      - ls -la ./build/  # Verify if files are copied to build
+      - ls -la ./wwwroot/  # Verify if files are copied to build
 
   build:
     commands:
       - echo "Creating deployment package..."
-      - zip -r wwwroot.zip ./build/  # Zip the entire build directory
+      - zip -r wwwroot.zip ./wwwroot/  # Zip the entire build directory
       - echo "Verifying the deployment package..."
       - ls -la wwwroot.zip
       - echo "Uploading deployment package to S3..."
