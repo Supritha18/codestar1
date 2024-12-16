@@ -7,7 +7,7 @@ phases:
     commands:
       - echo "Installing necessary tools..."
       - apt-get update -y
-      - apt-get install -y curl zip  # Install required tools
+      - apt-get install -y curl zip awscli  # Install required tools, including AWS CLI
       - echo "Installing Azure CLI..."
       - curl -sL https://aka.ms/InstallAzureCLIDeb | bash  # Install Azure CLI
       - az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_SECRET --tenant $AZURE_TENANT_ID  # Authenticate with Azure
@@ -28,6 +28,10 @@ phases:
       - zip -r build.zip ./build/  # Zip the entire build directory
       - echo "Verifying the deployment package..."
       - ls -la build.zip
+      - echo "Uploading deployment package to S3..."
+      - aws s3 cp build.zip s3://azurebucket-01/build/  # Upload build.zip to S3
+      - echo "Downloading deployment package from S3..."
+      - aws s3 cp s3://azurebucket-01/build/build.zip ./build.zip  # Download build.zip from S3 to ensure it's used for deployment
       - echo "Deploying to Azure App Service..."
       - az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_APP_SERVICE_NAME --src-path build.zip --type zip
 
